@@ -127,9 +127,12 @@
     fit($('vOwn'), isNaN(o) ? '' : fmt(o));
     let pct = '';
     if (!isNaN(m) && !isNaN(o) && m > 0) {
-      pct = String(Math.round(((m - o) / m) * 100));
+      pct = String(+(((m - o) / m) * 100).toFixed(1));   // দশমিক সহ (১ ঘর পর্যন্ত)
     }
-    $('vPct').textContent = pct;
+    const vp = $('vPct');
+    vp.textContent = pct;
+    // বক্সে ধরানোর জন্য দশমিক থাকলে ফন্ট ছোট হবে
+    vp.style.fontSize = pct.length <= 2 ? '' : pct.length === 3 ? '8.5cqw' : pct.length === 4 ? '7cqw' : '5.5cqw';
   }
 
   $('market').addEventListener('input', update);

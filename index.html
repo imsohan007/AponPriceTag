@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>আপন বাজার - প্রাইস ট্যাগ</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --tag-w: 2.83in; --tag-h: 1.6in; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: #e9e9e9;
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Kalpurush', sans-serif;
+  }
+  .panel {
+    max-width: 460px; margin: 0 auto 16px; background: #fff; padding: 14px;
+    border-radius: 10px; display: grid; gap: 10px;
+  }
+  .panel label { font-weight: 700; font-size: 15px; display: grid; gap: 4px; }
+  .panel input {
+    font-size: 20px; padding: 8px 10px; border: 2px solid #222; border-radius: 8px;
+    font-family: inherit;
+  }
+  .panel button {
+    font-size: 17px; font-weight: 700; padding: 10px; border: 0; border-radius: 8px;
+    background: #111; color: #fff; cursor: pointer; font-family: inherit;
+  }
+
+  /* ===== TAG ===== */
+  .tag {
+    position: relative; width: 460px; aspect-ratio: 1456 / 824; margin: 0 auto;
+    background: #000; color: #000; overflow: hidden; container-type: inline-size;
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Kalpurush', sans-serif;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .box {
+    position: absolute; background: #fff; border-radius: 4cqw;
+    display: flex; align-items: center;
+  }
+  .b1 { left: 2.7%; top: 7.3%; width: 72.3%; height: 24%; }
+  .b2 { left: 2.7%; top: 35.4%; width: 72.5%; height: 24%; }
+  .b3 { left: 76.4%; top: 7.3%; width: 20.8%; height: 52.2%; flex-direction: column; justify-content: flex-start; }
+  .label {
+    font-weight: 700; font-size: 6.3cqw; white-space: nowrap;
+    margin-left: 4.5cqw; line-height: 1;
+  }
+  .num {
+    margin-left: auto; margin-right: 3cqw;
+    font-family: 'Arial Black', Impact, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 900; font-style: italic; font-size: 14cqw; line-height: 1;
+    letter-spacing: -0.3cqw; white-space: nowrap;
+  }
+  .p-title { font-weight: 700; font-size: 3.1cqw; margin-top: 1cqw; white-space: nowrap; line-height: 1.1; }
+  .p-sign {
+    font-family: 'Arial Black', Impact, Arial, sans-serif; font-weight: 900; font-style: italic;
+    font-size: 8cqw; line-height: 1; margin-top: 0.5cqw;
+  }
+  .p-num {
+    align-self: flex-start; margin-left: 1.2cqw; margin-top: 3.2cqw;
+    font-family: 'Arial Black', Impact, Arial, sans-serif; font-weight: 900;
+    font-size: 11cqw; line-height: 1;
+  }
+  .logo-icon { position: absolute; left: 4cqw; top: 38.8cqw; height: 12.5cqw; width: auto; }
+  .logo-text { position: absolute; left: 17.5cqw; top: 40cqw; height: 10cqw; width: auto; }
+  .slogan {
+    position: absolute; left: 45%; top: 67%; color: #fff; font-weight: 700;
+    font-size: 5.4cqw; line-height: 1.35; white-space: nowrap;
+  }
+
+  /* ===== PRINT: 2.83in x 1.6in ===== */
+  @page { size: auto; margin: 0; }
+  @media print {
+    html, body { width: var(--tag-w); height: var(--tag-h); margin: 0; padding: 0; background: #fff; }
+    .panel { display: none; }
+    .tag { width: var(--tag-w); height: var(--tag-h); margin: 0; page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <label>বাজার মূল্য
+    <input type="text" id="market" value="240" inputmode="decimal" autocomplete="off" enterkeyhint="next">
+  </label>
+  <label>আপন মূল্য
+    <input type="text" id="own" value="235" inputmode="decimal" autocomplete="off" enterkeyhint="next">
+  </label>
+  <button id="printBtn" onclick="window.print()">🖨️ প্রিন্ট করুন</button>
+</div>
+
+<div class="tag" id="tag">
+  <div class="box b1"><span class="label">বাজার মূল্যঃ</span><span class="num" id="vMarket">240</span></div>
+  <div class="box b2"><span class="label">আপন মূল্যঃ</span><span class="num" id="vOwn">235</span></div>
+  <div class="box b3">
+    <div class="p-title">পার্সেন্টেজ</div>
+    <div class="p-sign">%</div>
+    <div class="p-num" id="vPct">2</div>
+  </div>
+
+  <img class="logo-icon" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVQAAAFqCAYAAABF4qJoAABOPElEQVR42u2dd5ikVZX/P6equnsYhhmiiCBJQSQoGEFXxIQAmBXDumtCUQR1Dbvurj93V9e8uoJKLOKPYAYEAAVShJSUGYOSCUAVhGQSG1D2H63G3HH3EXW2S7v7rO7j4HlW09Xy0u1C1Xq7i6F/Z+WUSqKxwe86qA2wF2C9hP0Hq0j0S0pZgJjZ9Z26L+A1kK78T4d6jHjJzP6vQpL81FpXnLzM3n9rQpL67l4cZ8uFqS3D3qgM1oJgUuGqB4yLg7uT1zP589n/v7G5e/C+mN3j15p6F7m8K7r6g6o7f9yKqJ+J1Z4o7N7z8n806JmD47v943L3q8H31r4/e11XzL09b1190479t142z8m/H5Xo5157833a/Yf8n123f1lB8f7/O4c935T/b6/26e3+84+PfbJp//XvfB2/1P7e/L/wA=">
+  <img class="logo-text" alt="আপন বাজার" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAGTCAYAAACVuU50AAB7tElEQVR42u2dZ5RkVdWKn11V3T2RmSEI5oTpMwfMoogSBAOCoIzmAEbMEXPAnAOIiiiiIiCgoIKIghFHgBEMiIHMuBCHbW9j8/p+s/q15wL1D2H63G3HH3EXW2S7v7rO7j4HlW09Xy0u1C1Xq7i6F/Z+WUSqKxwe86qA2wF2C9hP0Hq0j0S0pZgJjZ9Z26L+A1kK78T4d6jHjJzP6vQpL81FpXnLzM3n9rQpL67l4cZ8uFqS3D3qgM1oJgUuGqB4yLg7uT1zP589n/v7G5e/C+mN3j15p6F7m8K7r6g6o7f9yKqJ+J1Z4o7N7z8n806JmD47v943L3q8H31r4/e11XzL09b1190479t142z8m/H5Xo5157833a/Yf8n123f1lB8f7/O4c935T/b6/26e3+84+P筛查>
+
+  <div class="slogan">আপনে বাজার করুন<br>বাজার খরচ কমান ।</div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const fmt = n => Number.isInteger(n) ? String(n) : String(+n.toFixed(2));
+
+  function fit(el, text) {
+    el.textContent = text;
+    const len = text.length;
+    el.style.fontSize = len <= 3 ? '' : len === 4 ? '11.5cqw' : len === 5 ? '9.5cqw' : '8cqw';
+  }
+
+  // বাংলা অঙ্ক (০-৯) ও '।' কে ইংরেজি অঙ্ক/ডট-এ রূপান্তর
+  function parseNum(v) {
+    const bn = '০১২৩৪৫৬৭৮৯';
+    v = v.replace(/[০-৯]/g, d => bn.indexOf(d)).replace(/[।,]/g, '.').replace(/[^0-9.]/g, '');
+    return parseFloat(v);
+  }
+
+  function update() {
+    const m = parseNum($('market').value);
+    const o = parseNum($('own').value);
+    fit($('vMarket'), isNaN(m) ? '' : fmt(m));
+    fit($('vOwn'), isNaN(o) ? '' : fmt(o));
+    let pct = '';
+    if (!isNaN(m) && !isNaN(o) && m > 0) {
+      pct = String(Math.round(((m - o) / m) * 100));
+    }
+    $('vPct').textContent = pct;
+  }
+
+  $('market').addEventListener('input', update);
+  $('own').addEventListener('input', update);
+  update();
+
+  // Enter চাপলে পরের ঘরে যাবে; শেষ ঘরে Enter দিলে প্রিন্ট বাটনে যাবে
+  $('market').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); $('own').focus(); $('own').select(); }
+  });
+  $('own').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); $('printBtn').focus(); }
+  });
+  $('market').focus(); $('market').select();
+</script>
+</body>
+</html>
+```[cite: 1]

@@ -45,9 +45,9 @@
   .b3 { left: 76.4%; top: 7.3%; width: 20.8%; height: 52.2%; flex-direction: column; justify-content: flex-start; }
   .label { font-weight: 700; font-size: 6.3cqw; white-space: nowrap; margin-left: 4.5cqw; line-height: 1; }
   .num {
-    margin-left: auto; margin-right: 3cqw;
+    flex: 1; text-align: center; margin: 0 2cqw 0 0;
     font-family: 'Arial Black', Impact, 'Helvetica Neue', Arial, sans-serif;
-    font-weight: 900; font-style: italic; font-size: 14cqw; line-height: 1;
+    font-weight: 900; font-style: italic; font-size: 17cqw; line-height: 1;
     letter-spacing: -0.3cqw; white-space: nowrap;
   }
   .p-title { font-weight: 700; font-size: 3.1cqw; margin-top: 1cqw; white-space: nowrap; line-height: 1.1; }
@@ -56,17 +56,17 @@
     font-size: 8cqw; line-height: 1; margin-top: 0.5cqw;
   }
   .p-num {
-    align-self: flex-start; margin-left: 1.2cqw; margin-top: 3.2cqw;
+    align-self: center; text-align: center; margin: 3.2cqw 0 0 0;
     font-family: 'Arial Black', Impact, Arial, sans-serif; font-weight: 900;
-    font-size: 11cqw; line-height: 1;
+    font-size: 12.5cqw; line-height: 1;
   }
   /* বাংলা অঙ্ক = নিকষ ফন্ট */
   .tag.bn .num, .tag.bn .p-num {
     font-family: var(--bn); font-style: normal; font-weight: 700;
     -webkit-text-stroke: 0.7cqw #000; letter-spacing: 0;
   }
-  .tag.bn .num { font-size: 17cqw; }
-  .tag.bn .p-num { font-size: 12cqw; -webkit-text-stroke: 0.5cqw #000; }
+  .tag.bn .num { font-size: 19.5cqw; }
+  .tag.bn .p-num { font-size: 13.5cqw; -webkit-text-stroke: 0.5cqw #000; }
   .tag.bn .p-sign { font-style: normal; }
 
   .logo { position: absolute; left: 2.5cqw; top: 35.2cqw; width: 41.5cqw; height: auto; }
@@ -128,7 +128,7 @@
     el.textContent = conv(text);
     const len = text.length;
     const bn = lang === 'bn';
-    const big = bn ? 17 : 14;
+    const big = bn ? 19.5 : 17;
     el.style.fontSize = len <= 3 ? '' : (big * (len === 4 ? 0.82 : len === 5 ? 0.68 : 0.57)) + 'cqw';
   }
 
@@ -147,7 +147,7 @@
     if (!isNaN(m) && !isNaN(o) && m > 0) pct = String(+(((m - o) / m) * 100).toFixed(1));
     const vp = $('vPct');
     vp.textContent = conv(pct);
-    const base = lang === 'bn' ? 12 : 11;
+    const base = lang === 'bn' ? 13.5 : 12.5;
     vp.style.fontSize = pct.length <= 2 ? '' : (base * (pct.length === 3 ? 0.9 : pct.length === 4 ? 0.75 : 0.6)) + 'cqw';
   }
 

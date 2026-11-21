@@ -39,13 +39,13 @@
     font-family: var(--txt);
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  .box { position: absolute; background: #fff; border-radius: 4cqw; display: flex; align-items: center; }
+  .box { position: absolute; background: #fff; border-radius: 4cqw; display: flex; align-items: center; overflow: hidden; }
   .b1 { left: 2.7%; top: 7.3%; width: 72.3%; height: 24%; }
   .b2 { left: 2.7%; top: 35.4%; width: 72.5%; height: 24%; }
   .b3 { left: 76.4%; top: 7.3%; width: 20.8%; height: 52.2%; flex-direction: column; justify-content: flex-start; }
   .label { font-weight: 700; font-size: 6.3cqw; white-space: nowrap; margin-left: 4.5cqw; line-height: 1; }
   .num {
-    flex: 1; text-align: center; margin: 0 2cqw 0 0;
+    flex: 1; min-width: 0; text-align: center; margin: 0 2cqw 0 0;
     font-family: 'Arial Black', Impact, 'Helvetica Neue', Arial, sans-serif;
     font-weight: 900; font-style: italic; font-size: 16cqw; line-height: 1;
     letter-spacing: -0.3cqw; white-space: nowrap;
@@ -56,9 +56,9 @@
     font-size: 8cqw; line-height: 1; margin-top: 0.5cqw;
   }
   .p-num {
-    align-self: center; text-align: center; margin: 3.2cqw 0 0 0;
+    align-self: stretch; width: 100%; min-width: 0; text-align: center; margin: 3.2cqw 0 0 0;
     font-family: 'Arial Black', Impact, Arial, sans-serif; font-weight: 900;
-    font-size: 12cqw; line-height: 1;
+    font-size: 12cqw; line-height: 1; white-space: nowrap;
   }
   /* বাংলা অঙ্ক = নিকষ ফন্ট */
   .tag.bn .num, .tag.bn .p-num {
@@ -124,31 +124,46 @@
   const toBn = s => s.replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
   const conv = s => lang === 'bn' ? toBn(s) : s;
 
-  function fit(el, text) {
-    el.textContent = conv(text);
-    const len = text.length;
-    const bn = lang === 'bn';
-    const big = bn ? 21.5 : 16;
-    el.style.fontSize = len <= 3 ? '' : (big * (len === 4 ? 0.82 : len === 5 ? 0.68 : 0.57)) + 'cqw';
-  }
-
   function parseNum(v) {
     const bn = '০১২৩৪৫৬৭৮৯';
     v = v.replace(/[০-৯]/g, d => bn.indexOf(d)).replace(/[।,]/g, '.').replace(/[^0-9.]/g, '');
     return parseFloat(v);
   }
 
+  /* সংখ্যা বক্সের প্রস্থ ও উচ্চতায় ঢোকানো (স্ট্রোকসহ) */
+  const cv = document.createElement('canvas').getContext('2d');
+  function fitGlyph(el, capCqw, availW, availH) {
+    const cq = $('tag').clientWidth / 100;
+    el.style.fontSize = capCqw + 'cqw';
+    const text = el.textContent;
+    if (!text) return;
+    const cs = getComputedStyle(el);
+    cv.font = cs.fontStyle + ' ' + cs.fontWeight + ' 100px ' + cs.fontFamily;
+    const m = cv.measureText(text);
+    const w100 = m.width || 1;
+    const h100 = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) || 70;
+    const stroke = parseFloat(cs.webkitTextStrokeWidth) || 0;
+    const s = Math.min((availW - stroke) * 100 / w100, (availH - stroke) * 100 / h100, capCqw * cq);
+    el.style.fontSize = Math.max(s / cq, 2) + 'cqw';
+  }
+
   function update() {
+    const bn = lang === 'bn';
     const m = parseNum($('market').value);
     const o = parseNum($('own').value);
-    fit($('vMarket'), isNaN(m) ? '' : fmt(m));
-    fit($('vOwn'), isNaN(o) ? '' : fmt(o));
+
+    const setNum = (el, v) => {
+      el.textContent = isNaN(v) ? '' : conv(fmt(v));
+      fitGlyph(el, bn ? 21.5 : 16, el.clientWidth * 0.94, el.parentElement.clientHeight * 0.88);
+    };
+    setNum($('vMarket'), m);
+    setNum($('vOwn'), o);
+
     let pct = '';
     if (!isNaN(m) && !isNaN(o) && m > 0) pct = String(+(((m - o) / m) * 100).toFixed(1));
     const vp = $('vPct');
     vp.textContent = conv(pct);
-    const base = lang === 'bn' ? 14.5 : 12;
-    vp.style.fontSize = pct.length <= 2 ? '' : (base * (pct.length === 3 ? 0.9 : pct.length === 4 ? 0.75 : 0.6)) + 'cqw';
+    fitGlyph(vp, bn ? 14.5 : 12, vp.clientWidth * 0.9, (vp.parentElement.clientHeight - vp.offsetTop) * 0.9);
   }
 
   function setLang(l) {
@@ -172,6 +187,13 @@
   $('own').addEventListener('keydown', e => {
     if (e.key === 'Enter') { e.preventDefault(); $('printBtn').focus(); }
   });
+
+  if (document.fonts) {
+    document.fonts.load("700 100px NikoshTag", "০১২৩৪৫৬৭৮৯").then(update).catch(() => {});
+    document.fonts.ready.then(update);
+  }
+  window.addEventListener('resize', update);
+
   $('market').focus(); $('market').select();
 </script>
 </body>
